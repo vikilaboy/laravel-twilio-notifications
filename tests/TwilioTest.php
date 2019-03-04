@@ -213,6 +213,10 @@ class TwilioTest extends MockeryTestCase
             ->once()
             ->andReturn(null);
 
+        $this->config->shouldReceive('getServiceSid')
+            ->once()
+            ->andReturn(null);
+
         $this->twilio->sendMessage($smsMessage, null);
     }
 

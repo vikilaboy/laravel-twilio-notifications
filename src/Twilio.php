@@ -36,7 +36,7 @@ class Twilio
      * @param  string $to
      * @param bool $useAlphanumericSender
      * @return mixed
-     * @throws CouldNotSendNotification
+     * @throws \Twilio\Exceptions\TwilioException
      */
     public function sendMessage(TwilioMessage $message, $to, $useAlphanumericSender = false)
     {
@@ -61,17 +61,23 @@ class Twilio
      * @param TwilioSmsMessage $message
      * @param string $to
      * @return \Twilio\Rest\Api\V2010\Account\MessageInstance
-     * @throws CouldNotSendNotification
      */
     protected function sendSmsMessage(TwilioSmsMessage $message, $to)
     {
         $params = [
-            'from' => $this->getFrom($message),
             'body' => trim($message->content),
         ];
 
-        if ($serviceSid = $this->config->getServiceSid()) {
-            $params['messagingServiceSid'] = $serviceSid;
+        if ($messagingServiceSid = $this->getMessagingServiceSid($message)) {
+            $params['messagingServiceSid'] = $messagingServiceSid;
+        }
+
+        if ($from = $this->getFrom($message)) {
+            $params['from'] = $from;
+        }
+
+        if (!$from && !$messagingServiceSid) {
+            throw CouldNotSendNotification::missingFrom();
         }
 
         $this->fillOptionalParams($params, $message, [
@@ -98,7 +104,7 @@ class Twilio
      * @param TwilioCallMessage $message
      * @param string $to
      * @return \Twilio\Rest\Api\V2010\Account\CallInstance
-     * @throws CouldNotSendNotification
+     * @throws \Twilio\Exceptions\TwilioException
      */
     protected function makeCall(TwilioCallMessage $message, $to)
     {
@@ -115,9 +121,13 @@ class Twilio
             'fallbackMethod',
         ]);
 
+        if (! $from = $this->getFrom($message)) {
+            throw CouldNotSendNotification::missingFrom();
+        }
+
         return $this->twilioService->calls->create(
             $to,
-            $this->getFrom($message),
+            $from,
             $params
         );
     }
@@ -127,15 +137,21 @@ class Twilio
      *
      * @param TwilioMessage $message
      * @return string
-     * @throws CouldNotSendNotification
      */
     protected function getFrom(TwilioMessage $message)
     {
-        if (! $from = $message->getFrom() ?: $this->config->getFrom()) {
-            throw CouldNotSendNotification::missingFrom();
-        }
+        return $message->getFrom() ?: $this->config->getFrom();
+    }
 
-        return $from;
+    /**
+     * Get the messaging service SID from message, or config.
+     *
+     * @param TwilioSmsMessage $message
+     * @return string
+     */
+    protected function getMessagingServiceSid(TwilioSmsMessage $message)
+    {
+        return $message->getMessagingServiceSid() ?: $this->config->getServiceSid();
     }
 
     /**
@@ -148,13 +164,15 @@ class Twilio
         if ($sender = $this->config->getAlphanumericSender()) {
             return $sender;
         }
+
+        return null;
     }
 
     /**
      * @param array $params
      * @param TwilioMessage $message
      * @param array $optionalParams
-     * @return mixed
+     * @return Twilio
      */
     protected function fillOptionalParams(&$params, $message, $optionalParams)
     {
@@ -163,5 +181,7 @@ class Twilio
                 $params[$optionalParam] = $message->$optionalParam;
             }
         }
+
+        return $this;
     }
 }

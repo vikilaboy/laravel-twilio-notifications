@@ -12,6 +12,11 @@ class TwilioSmsMessage extends TwilioMessage
     /**
      * @var null|string
      */
+    public $messagingServiceSid = null;
+
+    /**
+     * @var null|string
+     */
     public $applicationSid = null;
 
     /**
@@ -43,6 +48,31 @@ class TwilioSmsMessage extends TwilioMessage
         if ($this->alphaNumSender && strlen($this->alphaNumSender) > 0) {
             return $this->alphaNumSender;
         }
+
+        return null;
+    }
+
+    /**
+     * Set the messaging service SID.
+     *
+     * @param  string $messagingServiceSid
+     * @return $this
+     */
+    public function messagingServiceSid($messagingServiceSid)
+    {
+        $this->messagingServiceSid = $messagingServiceSid;
+
+        return $this;
+    }
+
+    /**
+     * Get the messaging service SID of this message.
+     *
+     * @return null|string
+     */
+    public function getMessagingServiceSid()
+    {
+        return $this->messagingServiceSid;
     }
 
     /**
