@@ -48,8 +48,6 @@ class TwilioSmsMessage extends TwilioMessage
         if ($this->alphaNumSender && strlen($this->alphaNumSender) > 0) {
             return $this->alphaNumSender;
         }
-
-        return null;
     }
 
     /**
