@@ -76,7 +76,7 @@ class Twilio
             $params['from'] = $from;
         }
 
-        if (!$from && !$messagingServiceSid) {
+        if (! $from && ! $messagingServiceSid) {
             throw CouldNotSendNotification::missingFrom();
         }
 
@@ -164,8 +164,6 @@ class Twilio
         if ($sender = $this->config->getAlphanumericSender()) {
             return $sender;
         }
-
-        return null;
     }
 
     /**
