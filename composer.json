@@ -3,12 +3,14 @@
     "description": "A boilerplate for contributions.",
     "homepage": "https://github.com/laravel-notification-channels/twilio",
     "license": "MIT",
-    "authors": [{
-        "name": "Gregorio Hernández Caso",
-        "email": "gregoriohc@gmail.com",
-        "homepage": "https://github.com/gregoriohc",
-        "role": "Developer"
-    }],
+    "authors": [
+        {
+            "name": "Gregorio Hernández Caso",
+            "email": "gregoriohc@gmail.com",
+            "homepage": "https://github.com/gregoriohc",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "twilio/sdk": "~5.16",
@@ -19,7 +21,7 @@
     },
     "require-dev": {
         "mockery/mockery": "^0.9.5",
-        "phpunit/phpunit": "4.*"
+        "phpunit/phpunit": "5.*"
     },
     "autoload": {
         "psr-4": {
