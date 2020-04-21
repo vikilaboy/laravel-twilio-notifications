@@ -10,6 +10,8 @@
 
 This package makes it easy to send [Twilio notifications](https://documentation.twilio.com/docs) with Laravel 5.5+, 6.x and 7.x
 
+You are viewing the `3.x` documentation. [Click here](https://github.com/laravel-notification-channels/twilio/tree/2.x) to view the `2.x` documentation.
+
 ## Contents
 
 - [Installation](#installation)
@@ -31,7 +33,7 @@ You can install the package via composer:
 composer require laravel-notification-channels/twilio
 ```
 
-### Setting up your Twilio account
+### Configuration
 
 Add your Twilio Account SID, Auth Token, and From Number (optional) to your `.env`:
 
@@ -59,6 +61,21 @@ exception codes from [the documentation](https://www.twilio.com/docs/api/errors)
 
 If you want to suppress all errors, you can set the option to `['*']`. The errors will not be logged but notification
 failed events will still be emitted.
+
+## Upgrading from 2.x to 3.x
+
+If you're upgrading from version `2.x`, you'll need to make sure that your set environment variables match those above 
+in the config section. None of the environment variable names have changed, but if you used different keys in your 
+`services.php` config then you'll need to update them to match the above, or publish the config file and change the
+`env` key.
+ 
+You should also remove the old entry for `twilio` from your `services.php` config, since it's no longer used.
+ 
+The main breaking change between `2.x` and `3.x` is that failed notification will now throw an exception unless they are
+in the list of ignored error codes (publish the config file to edit these).
+
+You can replicate the `2.x` behaviour by setting `'ignored_error_codes' => ['*']`, which will case all exceptions to be
+suppressed.
 
 ## Usage
 
@@ -171,6 +188,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## Credits
 
 - [Gregorio Hernández Caso](https://github.com/gregoriohc)
+- [atymic](https://github.com/atymic)
 - [All Contributors](../../contributors)
 
 ## License
