@@ -39,12 +39,17 @@ class TwilioConfig
     {
         return $this->config['password'] ?? null;
     }
-
+    
     public function getAccountSid(): ?string
     {
         return $this->config['account_sid'] ?? null;
     }
 
+    public function getNotifyServiceId(): ?string
+    {
+        return $this->config['notify_service_id'] ?? null;
+    }
+    
     public function getFrom(): ?string
     {
         return $this->config['from'] ?? null;

@@ -47,7 +47,49 @@ class Twilio
             return $this->makeCall($message, $to);
         }
 
+        if ($message instanceof TwilioPushMessage) {
+            return $this->sendPushMessage($message);
+        }
+
         throw CouldNotSendNotification::invalidMessageObject($message);
+    }
+
+    protected function sendPushMessage(TwilioPushMessage $message)
+    {
+        $to = $this->config->getDebugTo();
+
+        if (empty($to)) {
+            $to = $message->getIdentity();
+        }
+
+        //@TODO: improve logic
+        $params = [
+            'identity' => $to,
+            'fcm' => [
+                'notification' => [
+                    'badge' => $message->getBadge(),
+                ],
+            ],
+        ];
+
+        if (!empty($message->getData())) {
+            $params['data'] = $message->getData();
+        }
+
+        if (!empty($message->getTitle())) {
+            $params['title'] = $message->getTitle();
+            $params['fcm']['notification']['title'] = $message->getTitle();
+        }
+
+        if (!empty($message->getBody())) {
+            $params['body'] = $message->getBody();
+            $params['fcm']['notification']['body'] = $message->getBody();
+            $params['fcm']['notification']['icon'] = $message->getIcon();
+        }
+
+        return $this->twilioService->notify->v1
+            ->services($this->config->getNotifyServiceId())
+            ->notifications->create($params);
     }
 
     /**
@@ -134,7 +176,7 @@ class Twilio
             'fallbackMethod',
         ]);
 
-        if (! $from = $this->getFrom($message)) {
+        if (!$from = $this->getFrom($message)) {
             throw CouldNotSendNotification::missingFrom();
         }
 

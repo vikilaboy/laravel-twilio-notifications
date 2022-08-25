@@ -52,7 +52,7 @@ class TwilioChannel
                 $message = new TwilioSmsMessage($message);
             }
 
-            if (! $message instanceof TwilioMessage) {
+            if (!$message instanceof TwilioMessage) {
                 throw CouldNotSendNotification::invalidMessageObject($message);
             }
 
@@ -89,11 +89,21 @@ class TwilioChannel
         if ($notifiable->routeNotificationFor(self::class, $notification)) {
             return $notifiable->routeNotificationFor(self::class, $notification);
         }
+
         if ($notifiable->routeNotificationFor('twilio', $notification)) {
             return $notifiable->routeNotificationFor('twilio', $notification);
         }
+
+        if ($notifiable->routeNotificationFor('twilioPush', $notification)) {
+            return $notifiable->routeNotificationFor('twilio', $notification);
+        }
+
         if (isset($notifiable->phone_number)) {
             return $notifiable->phone_number;
+        }
+
+        if (isset($notifiable->twilio_identifier)) {
+            return $notifiable->twilio_identifier;
         }
 
         throw CouldNotSendNotification::invalidReceiver();

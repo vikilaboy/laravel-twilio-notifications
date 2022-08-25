@@ -14,6 +14,8 @@ return [
      */
     'sms_service_sid' => env('TWILIO_SMS_SERVICE_SID'),
 
+    'notify_service_id' => env('TWILIO_NOTIFY_SERVICE_SID'),
+
     /**
      * Specify a number where all calls/messages should be routed. This can be used in development/staging environments
      * for testing.
