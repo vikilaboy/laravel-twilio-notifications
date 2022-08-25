@@ -54,6 +54,9 @@ class Twilio
         throw CouldNotSendNotification::invalidMessageObject($message);
     }
 
+    /**
+     * @throws CouldNotSendNotification
+     */
     protected function sendPushMessage(TwilioPushMessage $message)
     {
         $to = $this->config->getDebugTo();
@@ -62,30 +65,31 @@ class Twilio
             $to = $message->getIdentity();
         }
 
-        //@TODO: improve logic
+        if (empty($to)) {
+            throw CouldNotSendNotification::invalidReceiver();
+        }
+
         $params = [
             'identity' => $to,
-            'fcm' => [
-                'notification' => [
-                    'badge' => $message->getBadge(),
-                ],
-            ],
         ];
 
-        if (!empty($message->getData())) {
-            $params['data'] = $message->getData();
-        }
-
-        if (!empty($message->getTitle())) {
-            $params['title'] = $message->getTitle();
-            $params['fcm']['notification']['title'] = $message->getTitle();
-        }
-
-        if (!empty($message->getBody())) {
-            $params['body'] = $message->getBody();
-            $params['fcm']['notification']['body'] = $message->getBody();
-            $params['fcm']['notification']['icon'] = $message->getIcon();
-        }
+        $this->fillOptionalParams($params, $message, [
+            'tag',
+            'body',
+            'priority',
+            'ttl',
+            'title',
+            'sound',
+            'action',
+            'data',
+            'apn',
+            'gcm',
+            'sms',
+            'facebookMessenger',
+            'fcm',
+            'toBinding',
+            'deliveryCallbackUrl'
+        ]);
 
         return $this->twilioService->notify->v1
             ->services($this->config->getNotifyServiceId())
@@ -93,7 +97,7 @@ class Twilio
     }
 
     /**
-     * Send an sms message using the Twilio Service.
+     * Send a sms message using the Twilio Service.
      *
      * @param TwilioSmsMessage $message
      * @param string|null $to
@@ -225,10 +229,15 @@ class Twilio
      * @param array $optionalParams
      * @return Twilio
      */
-    protected function fillOptionalParams(&$params, $message, $optionalParams): self
+    protected function fillOptionalParams(array &$params, TwilioMessage $message, array $optionalParams): self
     {
         foreach ($optionalParams as $optionalParam) {
-            if ($message->$optionalParam) {
+            if (method_exists($message, 'get'.ucfirst($optionalParam))) {
+                $m = 'get'.ucfirst($optionalParam);
+                if (!empty($message->$m())) {
+                    $params[$optionalParam] = $message->$m();
+                }
+            } elseif ($message->$optionalParam) {
                 $params[$optionalParam] = $message->$optionalParam;
             }
         }

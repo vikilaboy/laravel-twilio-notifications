@@ -26,8 +26,8 @@ class CouldNotSendNotification extends \Exception
     public static function invalidReceiver(): self
     {
         return new static(
-            'The notifiable did not have a receiving phone number. Add a routeNotificationForTwilio
-            method or a phone_number attribute to your notifiable.'
+            'The notifiable did not have a receiving phone number or a twilio identifier. Add a routeNotificationForTwilio
+            method or a phone_number attribute to your notifiable. In case of push add routeNotificationForTwilioPush or twilio_identifier'
         );
     }
 
