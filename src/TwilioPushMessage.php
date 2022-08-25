@@ -17,35 +17,35 @@ class TwilioPushMessage extends TwilioMessage
 
     private string $identity;
 
-    private ?string $tag;
+    private ?string $tag = null;
 
-    private ?string $body;
+    private ?string $body = null;
 
-    private ?string $priority;
+    private ?string $priority = null;
 
-    private ?int $ttl;
+    private ?int $ttl = null;
 
-    private ?string $title;
+    private ?string $title = null;
 
-    private ?string $sound;
+    private ?string $sound = null;
 
-    private ?string $action;
+    private ?string $action = null;
 
-    private ?array $data;
+    private ?array $data = null;
 
-    private ?array $apn;
+    private ?array $apn = null;
 
-    private ?array $gcm;
+    private ?array $gcm = null;
 
-    private ?array $sms;
+    private ?array $sms = null;
 
-    private ?array $facebookMessenger;
+    private ?array $facebookMessenger = null;
 
-    private ?array $fcm;
+    private ?array $fcm = null;
 
-    private ?array $toBinding;
+    private ?array $toBinding = null;
 
-    private ?string $deliveryCallbackUrl;
+    private ?string $deliveryCallbackUrl = null;
 
     /**
      * @param string $identity
