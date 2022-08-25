@@ -1,13 +1,18 @@
 {
-    "name": "laravel-notification-channels/twilio",
+    "name": "vikilaboy/laravel-twilio-notifications",
     "description": "Provides Twilio notification channel for Laravel",
-    "keywords": ["laravel", "twilio", "notification", "sms", "call", "mms"],
+    "keywords": ["laravel", "twilio", "notification", "sms", "call", "mms", "push"],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel-notification-channels/twilio/issues",
-        "source": "https://github.com/laravel-notification-channels/twilio"
+        "issues": "https://github.com/vikilaboy/laravel-twilio-notifications/issues",
+        "source": "https://github.com/vikilaboy/laravel-twilio-notifications"
     },
     "authors": [
+        {
+            "name": "Victor Niculae",
+            "homepage": "https://github.com/vikilaboy",
+            "role": "Developer"
+        },
         {
             "name": "Gregorio Hernández Caso",
             "email": "gregoriohc@gmail.com",
