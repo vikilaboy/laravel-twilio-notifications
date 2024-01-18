@@ -61,8 +61,8 @@ class TwilioChannel
             $event = new NotificationFailed(
                 $notifiable,
                 $notification,
-                'twilio',
-                ['message' => $exception->getMessage(), 'exception' => $exception]
+                'TwilioException',
+                ['message' => $exception->getMessage(), 'exception' => $exception->getTraceAsString(), 'code' => $exception->getCode()]
             );
 
             $this->events->dispatch($event);
